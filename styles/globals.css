@@ -1,12 +1,17 @@
 :root {
   --font-family-primary: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  --font-size-text: 16px;
+  --font-family-heading: "Roboto Slab", Georgia, sans;
+  --font-size-text: 18px;
   --font-size-h6: 20px;
   --font-size-h5: 24px;
   --font-size-h4: 28px;
   --font-size-h3: 32px;
   --font-size-h2: 40px;
   --font-size-h1: 56px;
+
+  --color-black-01: #e2e2e2;
+  --color-black-03: #333;
+  --color-link: #326891;
 }
 
 @media screen and (max-width: 900px) {
@@ -29,17 +34,12 @@ body {
   font-size: var(--font-size-text);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-family-primary);
+  font-family: var(--font-family-heading);
 }
 h1 {
   font-size: var(--font-size-h1);
@@ -65,4 +65,47 @@ h5 {
 h6 {
   font-size: var(--font-size-h6);
   line-height: calc(var(--font-size-h6) + 4px);
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: underline;
+}
+a:hover {
+  text-decoration: none;
+}
+
+blockquote {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+blockquote *:first-child {
+  margin-top: 0;
+}
+blockquote *:last-child {
+  margin-bottom: 0;
+}
+
+img {
+  display: block;
+  width: 100%;
+}
+
+li {
+  font-family: var(--font-family-primary);
+}
+
+p {
+  font-size: var(--font-size-text);
+  line-height: calc(var(--font-size-text) + 7px);
+  color: var(--color-black-03);
+  hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+}
+
+time {
+  font-size: 0.8rem;
 }

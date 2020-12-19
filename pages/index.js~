@@ -1,0 +1,53 @@
+const baseUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://sarov.app'
+
+export default function Home({ data }) {
+  return (
+    <section>
+      <header>
+        <h1>новости сарова</h1>
+      </header>
+      <main>
+        {
+          data.items.map((item) => (
+            <article key={item.guid}>
+              <header>
+                <h3>{item.title}</h3>
+                <div>{item.time}</div>
+              </header>
+              <div dangerouslySetInnerHTML={{ __html: item.content }} />
+            </article>
+          ))
+        }
+      </main>
+      <style jsx>{`
+        section {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+        main {
+          width: 100%;
+          max-width: 900px;
+        }
+        article {
+          padding: 1rem 1rem 0;
+        }
+        article :global(p) :global(img) {
+          margin-bottom: 1rem;
+        }
+      `}</style>
+    </section>
+  )
+}
+
+export async function getStaticProps() {
+  const res = await fetch(`${baseUrl}/api/feed`)
+  const data = await res.json()
+
+  return {
+    props: {
+      data
+    },
+  }
+}

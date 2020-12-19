@@ -1,9 +1,18 @@
+import { SWRConfig } from 'swr'
 import Head from 'next/head'
+import fetcher from '../lib/fetcher'
 import '../styles/globals.css'
 
+const swrConfig = {
+  value: {
+    refreshInterval: 5000,
+    fetcher,
+  }
+}
+
 function MyApp({ Component, pageProps }) {
-  const title = 'Sarov News'
-  const description = 'Sarov News App'
+  const title = 'Новости Сарова | Топ-10'
+  const description = 'Топ-10 Новостей Сарова'
 
   return <>
     <Head>
@@ -28,7 +37,9 @@ function MyApp({ Component, pageProps }) {
       <link rel='icon' type='image/png' sizes='32x32' href='/icons/favicon-32x32.png' />
       <link rel='icon' type='image/png' sizes='16x16' href='/icons/favicon-16x16.png' />
       <link rel='manifest' href='/manifest.json' />
-      <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Inter:300,400,500' />
+      <link rel='preconnect' href='https://fonts.gstatic.com' />
+      <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter&subset=cyrillic,cyrillic-ext,latin-ext' />
+      <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Roboto+Slab&subset=cyrillic,cyrillic-ext,latin-ext' />
 
       <meta name='twitter:card' content='summary' />
       <meta name='twitter:url' content='https://sarov.app' />
@@ -43,7 +54,9 @@ function MyApp({ Component, pageProps }) {
       <meta property='og:url' content='https://sarov.app' />
       <meta property='og:image' content='https://sarov.app/icons/apple-touch-icon.png' />
     </Head>
-    <Component {...pageProps} />
+    <SWRConfig {...swrConfig}>
+      <Component {...pageProps} />
+    </SWRConfig>
   </>
 }
 
