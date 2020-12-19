@@ -3,15 +3,10 @@ import RssParser from 'rss-parser'
 const compose = (...fns) => (...args) => fns.reduceRight((y, f) => f(y), ...args)
 const rssParser = new RssParser()
 
-const removeClassNames = (str = '') => {
-  return str.replace(/\sclass=".+?"/g, '')
-}
-const removeStyles = (str = '') => {
-  return str.replace(/\s(style|bgcolor|rel|title)=".+?"/g, '')
-}
-const removeTable = (str = '') => {
-  return str.replace(/<table[\s\W\w]+<\/table>/g, '')
-}
+const removeClassNames = (str = '') => str.replace(/\sclass=".+?"/g, '')
+const removeStyles = (str = '') => str.replace(/\s(style|bgcolor|rel|title)="[^"]+?"/g, '')
+const removeTable = (str = '') => str.replace(/<table[\s\W\w]+<\/table>/g, '')
+const replaceHttpWithHttps = (str = '') => str.replace(/http:\/\/www.sarov.info/g, 'https://www.sarov.info')
 
 const applyFeedFormatters = (rawFeed) => {
   return {
@@ -19,7 +14,12 @@ const applyFeedFormatters = (rawFeed) => {
     items: rawFeed.items.map((item) => {
       return {
         ...item,
-        content: compose(removeTable, removeClassNames, removeStyles)(item.content),
+        content: compose(
+          removeTable,
+          removeClassNames,
+          removeStyles,
+          replaceHttpWithHttps,
+        )(item.content),
       }
     }),
   }
