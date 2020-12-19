@@ -38,7 +38,7 @@ export default function Home({ initialData }) {
               </header>
               <div dangerouslySetInnerHTML={{ __html: item.content }} />
               <footer>
-                <a href={item.link} target='_blank'>Читать далее</a>
+                <a href={item.link} rel='noopener' target='_blank'>Читать далее</a>
               </footer>
             </article>
           ))

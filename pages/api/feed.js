@@ -13,7 +13,7 @@ const removeStyles = (str) => str.replace(/\s(style|bgcolor|rel|title)="[^"]+?"/
 const removeTable = (str) => str.replace(/<table[\s\W\w]+<\/table>/g, '')
 const replaceHttpWithHttps = (str) => str.replace(/http:\/\/www.sarov.info/g, 'https://www.sarov.info')
 const reduceNesting = (str) => str.replace(/<span>(.+?)<\/span>/g, '$1')
-const replaceIframe = (str) => str.replace(/<iframe .+? src="([^"]+)".+?>/g, '<a href="$1" target="_blank">$1</a><br/>')
+const replaceIframe = (str) => str.replace(/<iframe .+? src="([^"]+)".+?>/g, '<a href="$1" rel="noopener" target="_blank">$1</a><br/>')
 const normalizeIframeLinks = (str) => str.replace(/https:\/\/www.sarov.info\/\/www/g, 'https://www')
 const replaceHeadings = (str) => str.replace(/▶/g, '👉 ')
 
