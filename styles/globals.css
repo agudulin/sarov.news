@@ -92,8 +92,27 @@ img {
   width: 100%;
 }
 
+
+ul,
+ol {
+  padding: 0;
+  list-style-type: none;
+  margin: 0.5rem 0.5rem 0.5rem 1.5rem;
+}
+ol {
+  list-style-type: decimal;
+}
 li {
-  font-family: var(--font-family-primary);
+  margin-bottom: 0.5rem;
+  font-size: var(--font-size-text);
+  line-height: calc(var(--font-size-text) + 7px);
+}
+ul li:before {
+  content: '–';
+  display: inline-block;
+  color: var(--color-black-03);
+  position: absolute;
+  margin-left: -0.9375rem;
 }
 
 p {

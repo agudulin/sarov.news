@@ -5,7 +5,7 @@ import '../styles/globals.css'
 
 const swrConfig = {
   value: {
-    refreshInterval: 5000,
+    refreshInterval: 30000,
     fetcher,
   }
 }
