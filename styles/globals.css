@@ -120,6 +120,7 @@ p {
   line-height: calc(var(--font-size-text) + 7px);
   color: var(--color-black-03);
   hyphens: auto;
+  word-break: break-word;
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   -ms-hyphens: auto;

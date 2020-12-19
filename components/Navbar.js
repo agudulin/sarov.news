@@ -15,7 +15,7 @@ export default function Navbar() {
         }
         nav {
           border-bottom: 1px solid var(--color-black-01);
-          padding: 0.5rem;
+          padding: 1rem;
           width: 100%;
           display: flex;
           justify-content: center;

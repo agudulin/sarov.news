@@ -11,8 +11,8 @@ const swrConfig = {
 }
 
 function MyApp({ Component, pageProps }) {
-  const title = 'Новости Сарова | Топ-10'
-  const description = 'Топ-10 Новостей Сарова'
+  const title = 'Новости Сарова'
+  const description = 'Последние новости и события города Саров'
 
   return <>
     <Head>
