@@ -33,12 +33,12 @@ export default function Home({ initialData }) {
           ) : data.items?.map((item) => (
             <article key={item.guid}>
               <header>
-                <h3>{item.title}</h3>
                 <time dateTime={item.isoDate}>{formatDate(item.isoDate)}</time>
+                <h3>{item.title}</h3>
               </header>
               <div dangerouslySetInnerHTML={{ __html: item.content }} />
               <footer>
-                <a href={item.link} target='_blank'>читать дальше</a>
+                <a href={item.link} target='_blank'>Читать далее</a>
               </footer>
             </article>
           ))
@@ -67,30 +67,47 @@ export default function Home({ initialData }) {
           justify-content: center;
           border-top: 1px solid var(--color-black-01);
           margin-top: 1rem;
+          padding: 1rem;
         }
         section > footer p {
           font-size: 0.8rem;
         }
 
         main > article {
-          padding: 1rem 1rem 0;
+          padding: 2rem 1rem;
+          margin: 1rem 0;
+        }
+        main > article:not(:last-child) {
+          border-bottom: 1px solid var(--color-black-01);
         }
         main > article :global(p) :global(img) {
           margin: 0 -1rem 1rem;
           width: calc(100% + 2rem);
         }
         main > article > footer {
-          font-size: 0.8rem;
           padding: 1rem;
-          text-align: center;
+          font-size: 0.75rem;
           margin: 0 -1rem;
           width: calc(100% + 2rem);
         }
-        main > article:not(:last-child) > footer {
-          border-bottom: 1px solid var(--color-black-01);
-        }
         main > article > footer a {
+          text-decoration: none;
+          padding: 0.5rem 0.875rem;
+          border: 1px solid var(--color-link);
+          border-radius: 3px;
+          transition: opacity ease 0.1s;
+          opacity: 0.7;
+        }
+        main > article > footer a:hover {
+          opacity: 1;
+        }
+        main > article time {
           text-transform: uppercase;
+          font-weight: 600;
+          color: var(--color-info);
+        }
+        main > article time + h3 {
+          margin-top: 0.5rem;
         }
       `}</style>
     </section>

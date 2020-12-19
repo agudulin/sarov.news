@@ -12,6 +12,7 @@
   --color-black-01: #e2e2e2;
   --color-black-03: #333;
   --color-link: #326891;
+  --color-info: #6b7280;
 }
 
 @media screen and (max-width: 900px) {
@@ -127,5 +128,5 @@ p {
 }
 
 time {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
