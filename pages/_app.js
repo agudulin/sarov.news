@@ -53,6 +53,13 @@ function MyApp({ Component, pageProps }) {
       <meta property='og:site_name' content={title} />
       <meta property='og:url' content='https://sarov.app' />
       <meta property='og:image' content='https://sarov.app/icons/apple-touch-icon.png' />
+
+      <script
+        async
+        defer
+        data-domain="sarov.app"
+        src="https://plausible.io/js/plausible.js"
+      />
     </Head>
     <SWRConfig {...swrConfig}>
       <Component {...pageProps} />
