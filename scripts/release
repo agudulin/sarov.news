@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+$(npm bin)/vercel --prod

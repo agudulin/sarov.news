@@ -1,0 +1,68 @@
+:root {
+  --font-family-primary: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --font-size-text: 16px;
+  --font-size-h6: 20px;
+  --font-size-h5: 24px;
+  --font-size-h4: 28px;
+  --font-size-h3: 32px;
+  --font-size-h2: 40px;
+  --font-size-h1: 56px;
+}
+
+@media screen and (max-width: 900px) {
+  :root {
+    --font-size-text: 16px;
+    --font-size-h6: 18px;
+    --font-size-h5: 20px;
+    --font-size-h4: 24px;
+    --font-size-h3: 28px;
+    --font-size-h2: 32px;
+    --font-size-h1: 40px;
+  }
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-text);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-primary);
+}
+h1 {
+  font-size: var(--font-size-h1);
+  line-height: calc(var(--font-size-h1) + 4px);
+}
+h2 {
+  font-size: var(--font-size-h2);
+  line-height: calc(var(--font-size-h2) + 4px);
+  margin-bottom: 1rem;
+}
+h3 {
+  font-size: var(--font-size-h3);
+  line-height: calc(var(--font-size-h3) + 4px);
+}
+h4 {
+  font-size: var(--font-size-h4);
+  line-height: calc(var(--font-size-h4) + 4px);
+}
+h5 {
+  font-size: var(--font-size-h5);
+  line-height: calc(var(--font-size-h5) + 6px);
+}
+h6 {
+  font-size: var(--font-size-h6);
+  line-height: calc(var(--font-size-h6) + 4px);
+}

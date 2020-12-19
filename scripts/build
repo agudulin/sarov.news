@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+$(npm bin)/next build && $(npm bin)/next export -o build
