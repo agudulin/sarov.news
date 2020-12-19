@@ -3,7 +3,13 @@ import fetcher from '../lib/fetcher'
 import Navbar from '../components/Navbar'
 
 const formatDate = (isoDate) => {
-  return new Date(isoDate).toLocaleString('ru')
+  return new Date(isoDate).toLocaleString('ru', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
 }
 
 export default function Home({ initialData }) {
