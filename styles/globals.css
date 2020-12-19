@@ -13,6 +13,8 @@
   --color-black-03: #333;
   --color-link: #326891;
   --color-info: #6b7280;
+  --color-floralwhite: floralwhite;
+  --color-wheat: wheat;
 }
 
 @media screen and (max-width: 900px) {
@@ -79,7 +81,10 @@ a:hover {
 blockquote {
   padding: 0;
   margin: 0;
-  border: none;
+  background-color: var(--color-floralwhite);
+  padding: 1rem;
+  border-left: 5px solid var(--color-wheat);
+  margin-bottom: 1rem;
 }
 blockquote *:first-child {
   margin-top: 0;
