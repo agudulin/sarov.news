@@ -1,4 +1,3 @@
-import useSWR from 'swr'
 import fetcher from '../lib/fetcher'
 import Navbar from '../components/Navbar'
 
@@ -12,9 +11,7 @@ const formatDate = (isoDate) => {
   })
 }
 
-export default function Home({ initialData }) {
-  const { data, error } = useSWR('/api/feed', { initialData })
-
+export default function Home({ data }) {
   return (
     <section>
       <header>
@@ -22,11 +19,7 @@ export default function Home({ initialData }) {
       </header>
       <main>
         {
-          error ? (
-            <article>
-              <p align='middle'>Новостей пока нет.</p>
-            </article>
-          ) : !data ? (
+          !data ? (
             <article>
               <p align='middle'>Загружаем...</p>
             </article>
@@ -45,7 +38,7 @@ export default function Home({ initialData }) {
         }
       </main>
       <footer>
-        <p>Контент перепечатан с сайта <a href='https://sarov.info' target='_blank'>www.sarov.info</a></p>
+        <p>Контент перепечатан с сайта <a href='https://sarov.info' rel='noopener' target='_blank'>www.sarov.info</a></p>
       </footer>
       <style jsx>{`
         section {
@@ -114,7 +107,11 @@ export default function Home({ initialData }) {
   )
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const data = await fetcher(`/api/feed`)
-  return { props: { initialData: data } }
+
+  return {
+    props: { data },
+    revalidate: 1,
+  }
 }

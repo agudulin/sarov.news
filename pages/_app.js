@@ -1,14 +1,5 @@
-import { SWRConfig } from 'swr'
 import Head from 'next/head'
-import fetcher from '../lib/fetcher'
 import '../styles/globals.css'
-
-const swrConfig = {
-  value: {
-    refreshInterval: 30000,
-    fetcher,
-  }
-}
 
 function MyApp({ Component, pageProps }) {
   const title = 'Новости Сарова'
@@ -61,9 +52,7 @@ function MyApp({ Component, pageProps }) {
         src="https://plausible.io/js/plausible.js"
       />
     </Head>
-    <SWRConfig {...swrConfig}>
-      <Component {...pageProps} />
-    </SWRConfig>
+    <Component {...pageProps} />
   </>
 }
 
