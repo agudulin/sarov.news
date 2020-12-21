@@ -2,3 +2,6 @@
 
 echo "👉 install npm dependencies\n"
 npm install
+echo "👉 adjust .env.local file\n"
+cp .env.example .env.local
+cat .env.local

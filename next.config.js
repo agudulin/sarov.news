@@ -2,6 +2,9 @@ const withPWA = require('next-pwa')
 const runtimeCaching = require('next-pwa/cache')
 
 module.exports = withPWA({
+  images: {
+    domains: ['www.sarov.info'],
+  },
   i18n: {
     locales: ['ru'],
     defaultLocale: 'ru',

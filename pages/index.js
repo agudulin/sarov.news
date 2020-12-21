@@ -1,3 +1,6 @@
+import Image from 'next/image'
+import Markdown from 'markdown-to-jsx'
+import useSwr from 'swr'
 import fetcher from '../lib/fetcher'
 import Navbar from '../components/Navbar'
 
@@ -11,7 +14,32 @@ const formatDate = (isoDate) => {
   })
 }
 
-export default function Home({ data }) {
+const markdownOptions = {
+  overrides: {
+    img: {
+      component: Image,
+      props: {
+        layout: 'fill',
+        unsized: true,
+      }
+    }
+  },
+  namedCodesToUnicode: {
+    le: '\u2264',
+    ge: '\u2265',
+    laquo: '«',
+    raquo: '»',
+    amp: '&',
+    thinsp: '\u202f',
+    minus: '–',
+    copy: '©',
+  }
+}
+
+export default function Home({ feedData }) {
+  const { data: feedItems } = useSwr('/api/feed', { initialData: feedData })
+  const isLoading = !feedItems
+
   return (
     <section>
       <header>
@@ -19,17 +47,17 @@ export default function Home({ data }) {
       </header>
       <main>
         {
-          !data ? (
+          isLoading ? (
             <article>
               <p align='middle'>Загружаем...</p>
             </article>
-          ) : data.items?.map((item) => (
-            <article key={item.guid}>
+          ) : feedItems.map((item) => (
+            <article key={item._id}>
               <header>
                 <time dateTime={item.isoDate}>{formatDate(item.isoDate)}</time>
                 <h3>{item.title}</h3>
               </header>
-              <div dangerouslySetInnerHTML={{ __html: item.content }} />
+              <Markdown options={markdownOptions}>{item.content}</Markdown>
               <footer>
                 <a href={item.link} rel='noopener' target='_blank'>Читать далее</a>
               </footer>
@@ -108,10 +136,10 @@ export default function Home({ data }) {
 }
 
 export async function getStaticProps() {
-  const data = await fetcher(`/api/feed`)
+  const feedData = await fetcher('/api/feed')
 
   return {
-    props: { data },
+    props: { feedData },
     revalidate: 1,
   }
 }
