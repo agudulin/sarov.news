@@ -3,8 +3,6 @@ import { SWRConfig } from 'swr'
 import fetcher from '../lib/fetcher'
 import '../styles/globals.css'
 
-const fiveMin = 5 * 60 * 1000
-
 function MyApp({ Component, pageProps }) {
   const title = 'Новости Сарова'
   const description = 'Последние новости и события города Саров'
@@ -34,7 +32,7 @@ function MyApp({ Component, pageProps }) {
       <link rel='manifest' href='/manifest.json' />
       <link rel='preconnect' href='https://fonts.gstatic.com' />
       <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter&subset=cyrillic,cyrillic-ext,latin-ext' />
-      <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Roboto+Slab&subset=cyrillic,cyrillic-ext,latin-ext' />
+      <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=PT+Serif&subset=cyrillic,cyrillic-ext,latin-ext' />
 
       <meta name='twitter:card' content='summary' />
       <meta name='twitter:url' content='https://sarov.app' />
@@ -56,7 +54,7 @@ function MyApp({ Component, pageProps }) {
         src="https://plausible.io/js/plausible.js"
       />
     </Head>
-    <SWRConfig value={{ fetcher, refreshInterval: fiveMin }}>
+    <SWRConfig value={{ fetcher }}>
       <Component {...pageProps} />
     </SWRConfig>
   </>

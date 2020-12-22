@@ -4,6 +4,7 @@ import { connectToDatabase, ObjectId } from '../../lib/db'
 
 const rssParser = new RssParser()
 
+const removeDotFromTheEnd = (str) => str.replace(/\.\s*$/g, '')
 const removeClassNames = (str) => str.replace(/\sclass=".+?"/g, '')
 const removeStyles = (str) => str.replace(/\s(style|bgcolor|rel|title)="[^"]+?"/g, '')
 const removeTable = (str) => str.replace(/<table[\s\W\w]+<\/table>/g, '')
@@ -19,7 +20,7 @@ const replaceIframe = (str) => str
 const applyFeedFormatters = (rawFeedItems) => {
   return rawFeedItems.map((item) => ({
     author: item.author ?? item.creator,
-    title: item.title,
+    title: removeDotFromTheEnd(item.title),
     link: item.link,
     isoDate: item.isoDate,
     content: compose(
