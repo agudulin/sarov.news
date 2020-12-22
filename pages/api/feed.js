@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-unfetch'
+import stripHtml from 'string-strip-html'
 import RssParser from 'rss-parser'
 import compose from '../../lib/compose'
 import { connectToDatabase, ObjectId } from '../../lib/db'
@@ -37,25 +39,32 @@ const applyFeedFormatters = (rawFeedItems) => {
   }))
 }
 
-async function fetchRssAndUpdateCollection(feedCollection) {
+async function createTelegramPosts(items) {
+  const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`
+
+  items.forEach(async(item) => {
+    const text = `*${item.title}*\n\n${stripHtml(item.content).result}\n\n[${item.link}](${item.link})`
+
+    await fetch(url, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        'chat_id': process.env.TELEGRAM_CHAT_ID,
+        'text': text,
+        'parse_mode': 'Markdown',
+        'disable_notification': true,
+      })
+    })
+  })
+}
+
+async function fetchRss(feedCollection) {
   const mainFeed = await rssParser.parseURL('https://sarov.info/main/rss')
   const zatoFeed = await rssParser.parseURL('https://sarov.info/news/zato/rss')
 
-  const feedItemsFromRss = applyFeedFormatters([
-    ...mainFeed.items,
-    ...zatoFeed.items,
-  ])
-  const existentFeedItems = await feedCollection.find({
-    link: {
-      $in: feedItemsFromRss.map((i) => i.link)
-    }
-  }).toArray()
-
-  const feedItemsToInsert = feedItemsFromRss.filter((i) => !existentFeedItems.some((item) => item.link === i.link))
-
-  if (feedItemsToInsert.length > 0) {
-    feedCollection.insertMany(feedItemsToInsert, { ordered: false })
-  }
+  return applyFeedFormatters([ ...mainFeed.items, ...zatoFeed.items ])
 }
 
 export default async function handler(req, res) {
@@ -69,7 +78,16 @@ export default async function handler(req, res) {
 
   if (twentyMinSinceLastRssFetch) {
     statsCollection.updateOne({ _id: stats._id }, { $set: { lastRssFeedFetched: now } })
-    await fetchRssAndUpdateCollection(feedCollection)
+
+    const rssFeedItems = await fetchRss(feedCollection)
+    const existentFeedItems = await feedCollection.find({ link: { $in: rssFeedItems.map((i) => i.link) } }).toArray()
+    const feedItemsToInsert = rssFeedItems.filter((i) => !existentFeedItems.some((item) => item.link === i.link))
+
+    if (feedItemsToInsert.length > 0) {
+      feedCollection.insertMany(feedItemsToInsert, { ordered: false })
+
+      createTelegramPosts(feedItemsToInsert)
+    }
   }
 
   const feedItems = await feedCollection.find({}).sort({ isoDate: -1 }).toArray()
