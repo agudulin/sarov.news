@@ -1,40 +1,8 @@
-import Image from 'next/image'
-import Markdown from 'markdown-to-jsx'
 import useSwr from 'swr'
 import fetcher from '../lib/fetcher'
+import Loader from '../components/Loader'
 import Navbar from '../components/Navbar'
-
-const formatDate = (isoDate) => {
-  return new Date(isoDate).toLocaleString('ru', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
-
-const markdownOptions = {
-  overrides: {
-    img: {
-      component: Image,
-      props: {
-        layout: 'fill',
-        unsized: true,
-      }
-    }
-  },
-  namedCodesToUnicode: {
-    le: '\u2264',
-    ge: '\u2265',
-    laquo: '«',
-    raquo: '»',
-    amp: '&',
-    thinsp: '\u202f',
-    minus: '–',
-    copy: '©',
-  }
-}
+import Post from '../components/Post'
 
 export default function Home({ feedData }) {
   const { data: feedItems } = useSwr('/api/feed', { initialData: feedData })
@@ -48,20 +16,9 @@ export default function Home({ feedData }) {
       <main>
         {
           isLoading ? (
-            <article>
-              <p align='middle'>Загружаем...</p>
-            </article>
+            <Loader />
           ) : feedItems.map((item) => (
-            <article key={item._id}>
-              <header>
-                <time dateTime={item.isoDate}>{formatDate(item.isoDate)}</time>
-                <h3>{item.title}</h3>
-              </header>
-              <Markdown options={markdownOptions}>{item.content}</Markdown>
-              <footer>
-                <a href={item.link} rel='noopener' target='_blank'>Читать далее</a>
-              </footer>
-            </article>
+            <Post key={item._id} item={item} />
           ))
         }
       </main>
@@ -92,41 +49,6 @@ export default function Home({ feedData }) {
         }
         section > footer p {
           font-size: 0.8rem;
-        }
-
-        main > article {
-          padding: 2rem 1rem;
-          margin: 1rem 0;
-        }
-        main > article:not(:last-child) {
-          border-bottom: 1px solid var(--color-black-01);
-        }
-        main > article :global(p) :global(img) {
-          margin: 0 -1rem 1rem;
-          width: calc(100% + 2rem);
-        }
-        main > article > footer {
-          padding: 1rem;
-          font-size: 0.75rem;
-          margin: 0 -1rem;
-          width: calc(100% + 2rem);
-        }
-        main > article > footer a {
-          text-decoration: none;
-          text-transform: uppercase;
-          padding: 0.05rem;
-          border-bottom: 1px dotted var(--color-link);
-        }
-        main > article > footer a:hover {
-          border-bottom: 1px solid var(--color-link);
-        }
-        main > article time {
-          text-transform: uppercase;
-          font-weight: 600;
-          color: var(--color-info);
-        }
-        main > article time + h3 {
-          margin-top: 0.5rem;
         }
       `}</style>
     </section>
