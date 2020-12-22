@@ -113,14 +113,12 @@ export default function Home({ feedData }) {
         }
         main > article > footer a {
           text-decoration: none;
-          padding: 0.5rem 0.875rem;
-          border: 1px solid var(--color-link);
-          border-radius: 3px;
-          transition: opacity ease 0.1s;
-          opacity: 0.7;
+          text-transform: uppercase;
+          padding: 0.05rem;
+          border-bottom: 1px dotted var(--color-link);
         }
         main > article > footer a:hover {
-          opacity: 1;
+          border-bottom: 1px solid var(--color-link);
         }
         main > article time {
           text-transform: uppercase;
