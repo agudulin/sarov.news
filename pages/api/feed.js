@@ -42,10 +42,10 @@ const applyFeedFormatters = (rawFeedItems) => {
 async function createTelegramPosts(items) {
   const url = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`
 
-  items.forEach(async(item) => {
+  return Promise.all(items.map((item) => {
     const text = `*${item.title}*\n\n${stripHtml(item.content).result}\n\n[${item.link}](${item.link})`
 
-    await fetch(url, {
+    return fetch(url, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
@@ -57,14 +57,18 @@ async function createTelegramPosts(items) {
         'disable_notification': true,
       })
     })
-  })
+  }))
 }
 
-async function fetchRss(feedCollection) {
+async function fetchRss() {
   const mainFeed = await rssParser.parseURL('https://sarov.info/main/rss')
   const zatoFeed = await rssParser.parseURL('https://sarov.info/news/zato/rss')
+  const cppFeed = await rssParser.parseURL('https://sarov.info/news/cpp/rss')
 
-  return applyFeedFormatters([ ...mainFeed.items, ...zatoFeed.items ])
+  const items = applyFeedFormatters([ ...mainFeed.items, ...zatoFeed.items, ...cppFeed.items ])
+  console.log(`👉 ${items.length} rss items fetched`)
+
+  return items
 }
 
 export default async function handler(req, res) {
@@ -74,20 +78,26 @@ export default async function handler(req, res) {
 
   const stats = await statsCollection.findOne({})
   const now = new Date()
-  const twentyMinSinceLastRssFetch = (now - stats.lastRssFeedFetched) > 20 * 60 * 1000
+  const shouldFetchRssFeed = ((now - stats.lastRssFeedFetched) > 20 * 60 * 1000) && !stats.processing
 
-  if (twentyMinSinceLastRssFetch) {
-    statsCollection.updateOne({ _id: stats._id }, { $set: { lastRssFeedFetched: now } })
+  if (shouldFetchRssFeed) {
+    console.log('👉 refreshing feed item started')
+    await statsCollection.updateOne({ _id: stats._id }, { $set: { lastRssFeedFetched: now, processing: true } })
 
-    const rssFeedItems = await fetchRss(feedCollection)
+    const rssFeedItems = await fetchRss()
     const existentFeedItems = await feedCollection.find({ link: { $in: rssFeedItems.map((i) => i.link) } }).toArray()
     const feedItemsToInsert = rssFeedItems.filter((i) => !existentFeedItems.some((item) => item.link === i.link))
 
-    if (feedItemsToInsert.length > 0) {
-      feedCollection.insertMany(feedItemsToInsert, { ordered: false })
+    console.log(`👉 ${feedItemsToInsert.length} new items to add to db`)
+    feedItemsToInsert.forEach((item) => console.log(`...${item.link}`))
 
-      createTelegramPosts(feedItemsToInsert)
+    if (feedItemsToInsert.length > 0) {
+      await feedCollection.insertMany(feedItemsToInsert, { ordered: false })
+      await createTelegramPosts(feedItemsToInsert)
     }
+
+    await statsCollection.updateOne({ _id: stats._id }, { $set: { processing: false } })
+    console.log('👉 refreshing feed item finished')
   }
 
   const feedItems = await feedCollection.find({}).sort({ isoDate: -1 }).toArray()
