@@ -54,7 +54,8 @@ async function createTelegramPosts(items) {
         'chat_id': process.env.TELEGRAM_CHAT_ID,
         'text': text,
         'parse_mode': 'Markdown',
-        'disable_notification': true,
+        'disable_web_page_preview': true,
+        'disable_notification': false,
       })
     })
   }))
