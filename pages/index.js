@@ -4,6 +4,16 @@ import Loader from '../components/Loader'
 import Navbar from '../components/Navbar'
 import Post from '../components/Post'
 
+const filterOutDupicates = (items = []) => {
+  return items.reduce((acc, item) => {
+    if (!acc.find((i) => i.title === item.title)) {
+      return [...acc, item]
+    } else {
+      return acc
+    }
+  }, [])
+}
+
 export default function Home({ feedData }) {
   const { data: feedItems } = useSwr('/api/feed', { initialData: feedData })
   const isLoading = !feedItems
@@ -17,7 +27,7 @@ export default function Home({ feedData }) {
         {
           isLoading ? (
             <Loader />
-          ) : feedItems.map((item) => (
+          ) : filterOutDupicates(feedItems).map((item) => (
             <Post key={item._id} item={item} />
           ))
         }
@@ -72,6 +82,6 @@ export async function getStaticProps() {
 
   return {
     props: { feedData },
-    revalidate: 1,
+    revalidate: 60,
   }
 }

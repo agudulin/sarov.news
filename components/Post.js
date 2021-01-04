@@ -23,9 +23,12 @@ const markdownOptions = {
   },
   namedCodesToUnicode: {
     amp: '&',
+    bdquo: '',
     copy: '©',
     ge: '\u2265',
+    hellip: '…',
     laquo: '«',
+    ldquo: '',
     le: '\u2264',
     minus: '–',
     raquo: '»',
