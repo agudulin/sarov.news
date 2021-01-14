@@ -85,20 +85,30 @@ export default async function handler(req, res) {
     console.log('👉 refreshing feed item started')
     await statsCollection.updateOne({ _id: stats._id }, { $set: { lastRssFeedFetched: now, processing: true } })
 
-    const rssFeedItems = await fetchRss()
-    const existentFeedItems = await feedCollection.find({ link: { $in: rssFeedItems.map((i) => i.link) } }).toArray()
-    const feedItemsToInsert = rssFeedItems.filter((i) => !existentFeedItems.some((item) => item.link === i.link))
+    try {
+      const rssFeedItems = await fetchRss()
+      const existentFeedItems = await feedCollection.find({ link: { $in: rssFeedItems.map((i) => i.link) } }).toArray()
+      const feedItemsToInsert = rssFeedItems.filter((i) => !existentFeedItems.some((item) => item.link === i.link))
 
-    console.log(`👉 ${feedItemsToInsert.length} new items to add to db`)
-    feedItemsToInsert.forEach((item) => console.log(`...${item.link}`))
+      console.log(`👉 ${feedItemsToInsert.length} new items to add to db`)
+      feedItemsToInsert.forEach((item) => console.log(`...${item.link}`))
 
-    if (feedItemsToInsert.length > 0) {
-      await feedCollection.insertMany(feedItemsToInsert, { ordered: false })
-      await createTelegramPosts(feedItemsToInsert)
+      if (feedItemsToInsert.length > 0) {
+        await feedCollection.insertMany(feedItemsToInsert, { ordered: false })
+        await createTelegramPosts(feedItemsToInsert)
+      }
+
+      await statsCollection.updateOne({ _id: stats._id }, { $set: { processing: false } })
+      console.log('👉 refreshing feed item finished')
+    } catch (err) {
+      console.log('❌ can\'t fetch rss feed')
+      await statsCollection.updateOne({ _id: stats._id }, { $set: {
+        lastRssFeedFetched: now,
+        processing: false,
+        error: true,
+      } })
+      console.log(err)
     }
-
-    await statsCollection.updateOne({ _id: stats._id }, { $set: { processing: false } })
-    console.log('👉 refreshing feed item finished')
   }
 
   const feedItems = await feedCollection.find({}).sort({ isoDate: -1 }).toArray()
