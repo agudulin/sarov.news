@@ -94,7 +94,7 @@ export default async function handler(req, res) {
       feedItemsToInsert.forEach((item) => console.log(`...${item.link}`))
 
       if (feedItemsToInsert.length > 0) {
-        await feedCollection.insertMany(feedItemsToInsert, { ordered: false })
+        await feedCollection.insertMany(feedItemsToInsert, { upsert: true, ordered: false })
         await createTelegramPosts(feedItemsToInsert)
       }
 
