@@ -1,9 +1,10 @@
 import useSwr from 'swr'
+import fetcher from '../lib/fetcher'
 import Post from './Post'
-import Loader from '../components/Loader'
+import Loader from './Loader'
 
 export default function Page({ initialData, index }) {
-  const { data: feedItems } = useSwr(`/api/feed?page=${index}`, { initialData })
+  const { data: feedItems } = useSwr(`/api/feed?page=${index}`, fetcher, { initialData, revalidateOnMount: true })
   const isLoading = !feedItems
 
   return (

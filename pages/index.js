@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'
 import Page from '../components/Page'
 import Button from '../components/Button'
 
-export default function Home() {
+export default function Home({ firstPageData }) {
   const [pageIndex, setPageIndex] = useState(0)
   const handlePageIndexChange = (nextIndex) => () => {
     window.scroll({ top: 0, left: 0 })
@@ -17,8 +17,8 @@ export default function Home() {
         <Navbar onClick={handlePageIndexChange(0)} />
       </header>
       <main>
-        <Page index={pageIndex} />
-        <div style={{ display: 'none' }}><Page index={pageIndex + 1}/></div>
+        <Page index={pageIndex} initialData={firstPageData} />
+        <div style={{ display: 'none' }}><Page index={pageIndex + 1} initialData={firstPageData} /></div>
         <footer>
           <Button disabled={pageIndex === 0} onClick={handlePageIndexChange(pageIndex - 1)}>← Сюда</Button>
           <Button onClick={handlePageIndexChange(pageIndex + 1)}>Туда →</Button>
@@ -76,11 +76,11 @@ export default function Home() {
   )
 }
 
-//export async function getStaticProps() {
-  //const feedData = await fetcher(`/api/feed?page=0`)
+export async function getStaticProps() {
+  const firstPageData = await fetcher(`/api/feed?page=0`)
 
-  //return {
-    //props: { feedData },
-    //revalidate: 60,
-  //}
-//}
+  return {
+    props: { firstPageData },
+    revalidate: 60,
+  }
+}
