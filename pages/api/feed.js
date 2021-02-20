@@ -72,6 +72,14 @@ async function fetchRss() {
   return items
 }
 
+const sanitizePageIndex = (pageIndex) => {
+  if (!pageIndex || pageIndex < 0) {
+    return 0
+  }
+
+  return pageIndex
+}
+
 export default async function handler(req, res) {
   const db = await connectToDatabase(process.env.MONGODB_URI)
   const feedCollection = await db.collection('feed')
@@ -80,6 +88,10 @@ export default async function handler(req, res) {
   const stats = await statsCollection.findOne({})
   const now = new Date()
   const shouldFetchRssFeed = ((now - stats.lastRssFeedFetched) > 20 * 60 * 1000) && !stats.processing
+
+  const pageLimit = 10
+  const pageIndex = sanitizePageIndex(req.query.page)
+  const pageSkip = pageIndex * pageLimit
 
   if (shouldFetchRssFeed) {
     console.log('👉 refreshing feed item started')
@@ -111,7 +123,11 @@ export default async function handler(req, res) {
     }
   }
 
-  const feedItems = await feedCollection.find({}).sort({ isoDate: -1 }).toArray()
+  const feedItems = await feedCollection.find({})
+    .sort({ isoDate: -1 })
+    .skip(pageSkip)
+    .limit(pageLimit)
+    .toArray()
 
   res.json(feedItems)
 }

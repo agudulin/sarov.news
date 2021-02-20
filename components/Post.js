@@ -50,10 +50,12 @@ export default function Post({ item }) {
       <style jsx>{`
         article {
           padding: 2rem 1rem;
-          margin: 1rem 0;
+          margin-top: 1rem;
+          position: relative;
         }
         article:not(:last-child) {
           border-bottom: 1px solid var(--color-black-01);
+          margin-bottom: 1rem;
         }
         article :global(p) :global(img) {
           margin: 0 -1rem 1rem;

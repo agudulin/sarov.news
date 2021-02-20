@@ -13,9 +13,11 @@
   --color-black-01: #e2e2e2;
   --color-black-03: #333;
   --color-link: #326891;
+  --color-link-disabled: #e2e2e2;
   --color-info: #6b7280;
   --color-floralwhite: floralwhite;
   --color-wheat: wheat;
+  --color-white: #fff;
 }
 
 @media screen and (max-width: 900px) {

@@ -1,36 +1,28 @@
-import useSwr from 'swr'
+import { useState } from 'react'
 import fetcher from '../lib/fetcher'
-import Loader from '../components/Loader'
 import Navbar from '../components/Navbar'
-import Post from '../components/Post'
+import Page from '../components/Page'
+import Button from '../components/Button'
 
-const filterOutDupicates = (items = []) => {
-  return items.reduce((acc, item) => {
-    if (!acc.find((i) => i.title === item.title)) {
-      return [...acc, item]
-    } else {
-      return acc
-    }
-  }, [])
-}
-
-export default function Home({ feedData }) {
-  const { data: feedItems } = useSwr('/api/feed', { initialData: feedData })
-  const isLoading = !feedItems
+export default function Home() {
+  const [pageIndex, setPageIndex] = useState(0)
+  const handlePageIndexChange = (nextIndex) => () => {
+    window.scroll({ top: 0, left: 0 })
+    setPageIndex(nextIndex > 0 ? nextIndex : 0)
+  }
 
   return (
     <section>
       <header>
-        <Navbar />
+        <Navbar onClick={handlePageIndexChange(0)} />
       </header>
       <main>
-        {
-          isLoading ? (
-            <Loader />
-          ) : filterOutDupicates(feedItems).map((item) => (
-            <Post key={item._id} item={item} />
-          ))
-        }
+        <Page index={pageIndex} />
+        <div style={{ display: 'none' }}><Page index={pageIndex + 1}/></div>
+        <footer>
+          <Button disabled={pageIndex === 0} onClick={handlePageIndexChange(pageIndex - 1)}>← Сюда</Button>
+          <Button onClick={handlePageIndexChange(pageIndex + 1)}>Туда →</Button>
+        </footer>
       </main>
       <footer>
         <p>Контент перепечатан с сайта <a href='https://sarov.info' rel='noopener' target='_blank'>sarov.info</a></p>
@@ -72,16 +64,23 @@ export default function Home({ feedData }) {
           width: 1rem;
           margin: 0 4px -4px 0;
         }
+        main > footer {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 0 1rem;
+          margin-bottom: 1rem;
+        }
       `}</style>
     </section>
   )
 }
 
-export async function getStaticProps() {
-  const feedData = await fetcher('/api/feed')
+//export async function getStaticProps() {
+  //const feedData = await fetcher(`/api/feed?page=0`)
 
-  return {
-    props: { feedData },
-    revalidate: 60,
-  }
-}
+  //return {
+    //props: { feedData },
+    //revalidate: 60,
+  //}
+//}

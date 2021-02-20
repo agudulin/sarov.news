@@ -1,10 +1,10 @@
 import Link from 'next/link'
 
-export default function Navbar() {
+export default function Navbar({ onClick }) {
   return (
     <nav>
       <Link href='/'>
-        <a>
+        <a onClick={onClick}>
           <h6>Новости Сарова</h6>
         </a>
       </Link>
