@@ -3,6 +3,7 @@ import fetcher from '../lib/fetcher'
 import Navbar from '../components/Navbar'
 import Page from '../components/Page'
 import Button from '../components/Button'
+import Footer from '../components/Footer'
 
 export default function Home({ firstPageData }) {
   const [pageIndex, setPageIndex] = useState(0)
@@ -24,13 +25,7 @@ export default function Home({ firstPageData }) {
           <Button onClick={handlePageIndexChange(pageIndex + 1)}>Туда →</Button>
         </footer>
       </main>
-      <footer>
-        <p>Контент перепечатан с сайта <a href='https://sarov.info' rel='noopener' target='_blank'>sarov.info</a></p>
-        <p>
-          <img src='/icons/telegram.svg' alt='telegram logo' />
-          <a href='https://t.me/sarov_news' rel='noopener' target='_blank'>sarov_news</a>
-        </p>
-      </footer>
+      <Footer />
       <style jsx>{`
         section {
           display: flex;
@@ -44,25 +39,6 @@ export default function Home({ firstPageData }) {
         section > main {
           width: 100%;
           max-width: 700px;
-        }
-        section > footer {
-          width: 100%;
-          max-width: 700px;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          border-top: 1px solid var(--color-black-01);
-          margin-top: 1rem;
-          padding: 1rem;
-        }
-        section > footer p {
-          font-size: 0.8rem;
-          margin: 0;
-        }
-        section > footer img {
-          display: inline;
-          width: 1rem;
-          margin: 0 4px -4px 0;
         }
         main > footer {
           display: flex;
