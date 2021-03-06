@@ -36,12 +36,20 @@ const markdownOptions = {
   }
 }
 
-export default function Post({ item }) {
+export default function Post({ item, singlePostPage }) {
   return (
     <article>
       <header>
         <time dateTime={item.isoDate}>{formatDate(item.isoDate)}</time>
-        <h3>{item.title}</h3>
+        <h3>
+          {
+            singlePostPage ? (
+              <>{item.title}</>
+            ) : (
+              <a href={`/post/${item._id}`}>{item.title}</a>
+            )
+          }
+        </h3>
       </header>
       <Markdown options={markdownOptions}>{item.content}</Markdown>
       <footer>
@@ -60,6 +68,13 @@ export default function Post({ item }) {
         article :global(p) :global(img) {
           margin: 0 -1rem 1rem;
           width: calc(100% + 2rem);
+        }
+        article > header > h3 > a {
+          color: inherit;
+          text-decoration: none;
+        }
+        article > header > h3 > a:hover {
+          text-decoration: underline;
         }
         article > footer {
           padding: 1rem;
